@@ -4,6 +4,11 @@ export var speed = 500
 var distance = 1000
 export var damage = 50
 
+export(int, 0, 100) var poisonDamage:int = 0
+export(int, 0, 7) var poisionLength:int = 0
+export(int, 0, 1000) var slowEffect:int = 0
+export(float, 0, 3) var slowTime:float = 0
+
 var startPos:Vector2
 
 var enabled = false
@@ -15,7 +20,9 @@ func _ready():
 	pass
 	
 func _physics_process(delta):
-	move(delta)
+	if enabled:
+		frameAnim(delta)
+		move(delta)
 	
 func move(delta:float):
 	
@@ -70,7 +77,26 @@ func _on_Bullet_body_entered(body):
 			if body.is_in_group("Shootable"):
 				if not body.is_in_group("Ally"+String(id)):
 					body.rpc("hit", damage, id)
+					if body.is_in_group("Player"):
+						get_tree().get_nodes_in_group("Master"+String(id))[0].rpc("didDamage", damage)
+						hitPlayer(body)
+					elif body.is_in_group("Dummy"):
+						get_tree().get_nodes_in_group("Master"+String(id))[0].rpc("didDamage", damage)
 					rpc("destroy")
 			else:
 				rpc("destroy")
 		pass
+		
+func hitPlayer(body):
+	
+	if not poisonDamage <= 0:
+		body.rpc("poison", poisonDamage, poisionLength, id)
+		
+	if not slowEffect <= 0:
+		body.rpc("slow", slowEffect, slowTime)
+	
+	pass
+	
+func frameAnim(delta:float):
+	
+	pass

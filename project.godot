@@ -9,6 +9,31 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Reference",
+"class": "CommandData",
+"language": "GDScript",
+"path": "res://addons/gift/util/cmd_data.gd"
+}, {
+"base": "Reference",
+"class": "CommandInfo",
+"language": "GDScript",
+"path": "res://addons/gift/util/cmd_info.gd"
+}, {
+"base": "Node",
+"class": "DebugNode",
+"language": "GDScript",
+"path": "res://Scenes/Other/DebugNode.gd"
+}, {
+"base": "Node2D",
+"class": "Effect",
+"language": "GDScript",
+"path": "res://Scenes/Effects/Effect.gd"
+}, {
+"base": "Node",
+"class": "Gift",
+"language": "GDScript",
+"path": "res://addons/gift/gift_node.gd"
+}, {
 "base": "Node2D",
 "class": "Gun",
 "language": "GDScript",
@@ -19,14 +44,55 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Scenes/Melee/Melee.gd"
 }, {
+"base": "KinematicBody2D",
+"class": "Minion",
+"language": "GDScript",
+"path": "res://Scenes/Minions/Minion.gd"
+}, {
+"base": "KinematicBody2D",
+"class": "Player",
+"language": "GDScript",
+"path": "res://Scenes/Characters/Player.gd"
+}, {
+"base": "Reference",
+"class": "SenderData",
+"language": "GDScript",
+"path": "res://addons/gift/util/sender_data.gd"
+}, {
+"base": "Node2D",
+"class": "Super",
+"language": "GDScript",
+"path": "res://Scenes/Supers/Super.gd"
+}, {
+"base": "Node2D",
+"class": "Throwable",
+"language": "GDScript",
+"path": "res://Scenes/Throwables/Throwable.gd"
+}, {
+"base": "Node2D",
+"class": "Thrower",
+"language": "GDScript",
+"path": "res://Scenes/Thrower/Thrower.gd"
+}, {
 "base": "Control",
 "class": "gameUI",
 "language": "GDScript",
 "path": "res://Scenes/UI/GameUI.gd"
 } ]
 _global_script_class_icons={
+"CommandData": "",
+"CommandInfo": "",
+"DebugNode": "",
+"Effect": "",
+"Gift": "",
 "Gun": "",
 "Melee": "",
+"Minion": "",
+"Player": "",
+"SenderData": "",
+"Super": "",
+"Throwable": "",
+"Thrower": "",
 "gameUI": ""
 }
 
@@ -43,12 +109,14 @@ Data="*res://Scripts/Data.gd"
 Globals="*res://Scripts/Globals.gd"
 Network="*res://Scripts/Network.gd"
 ObjectPool="*res://Scripts/ObjectPool.gd"
+Effects="*res://Scenes/Game/Effects.tscn"
+Popups="*res://Scenes/UI/Popups.tscn"
+Twitch="*res://Scripts/Twitch.gd"
 
 [debug]
 
 gdscript/warnings/unassigned_variable=false
 gdscript/warnings/unused_variable=false
-gdscript/warnings/unused_class_variable=false
 gdscript/warnings/unused_argument=false
 gdscript/warnings/function_may_yield=false
 gdscript/warnings/unused_signal=false
@@ -59,26 +127,57 @@ gdscript/warnings/return_value_discarded=false
 window/stretch/mode="2d"
 window/stretch/aspect="keep"
 
+[editor_plugins]
+
+enabled=PoolStringArray( "gift" )
+
+[importer_defaults]
+
+texture={
+"compress/bptc_ldr": 0,
+"compress/hdr_mode": 0,
+"compress/lossy_quality": 0.7,
+"compress/mode": 0,
+"compress/normal_map": 0,
+"detect_3d": false,
+"flags/anisotropic": false,
+"flags/filter": false,
+"flags/mipmaps": false,
+"flags/repeat": 0,
+"flags/srgb": 2,
+"process/HDR_as_SRGB": false,
+"process/fix_alpha_border": true,
+"process/invert_color": false,
+"process/premult_alpha": false,
+"size_limit": 0,
+"stream": false,
+"svg/scale": 1.0
+}
+
 [input]
 
 up={
 "deadzone": 0.5,
 "events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":87,"unicode":0,"echo":false,"script":null)
+, Object(InputEventJoypadMotion,"resource_local_to_scene":false,"resource_name":"","device":0,"axis":1,"axis_value":-1.0,"script":null)
  ]
 }
 down={
 "deadzone": 0.5,
 "events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":83,"unicode":0,"echo":false,"script":null)
+, Object(InputEventJoypadMotion,"resource_local_to_scene":false,"resource_name":"","device":0,"axis":1,"axis_value":1.0,"script":null)
  ]
 }
 left={
 "deadzone": 0.5,
 "events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":65,"unicode":0,"echo":false,"script":null)
+, Object(InputEventJoypadMotion,"resource_local_to_scene":false,"resource_name":"","device":0,"axis":0,"axis_value":-1.0,"script":null)
  ]
 }
 right={
 "deadzone": 0.5,
 "events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":68,"unicode":0,"echo":false,"script":null)
+, Object(InputEventJoypadMotion,"resource_local_to_scene":false,"resource_name":"","device":0,"axis":0,"axis_value":1.0,"script":null)
  ]
 }
 shoot={
@@ -96,12 +195,33 @@ autoaim={
 "events": [ Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"button_mask":0,"position":Vector2( 0, 0 ),"global_position":Vector2( 0, 0 ),"factor":1.0,"button_index":3,"pressed":false,"doubleclick":false,"script":null)
  ]
 }
+debugDie={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":80,"unicode":0,"echo":false,"script":null)
+ ]
+}
+debugHeal={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":79,"unicode":0,"echo":false,"script":null)
+ ]
+}
+debugNoClip={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":73,"unicode":0,"echo":false,"script":null)
+ ]
+}
 
 [layer_names]
 
 2d_physics/layer_1="Players"
 2d_physics/layer_2="Bullets"
 2d_physics/layer_3="Terrain"
+2d_physics/layer_4="Minions"
+
+[physics]
+
+2d/default_gravity=0
+2d/default_gravity_vector=Vector2( 0, 0 )
 
 [rendering]
 

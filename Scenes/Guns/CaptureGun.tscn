@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Scenes/Guns/BitGun.tscn" type="PackedScene" id=1]
+
+[sub_resource type="StreamTexture" id=1]
+load_path = "res://.import/CaptureGun.png-b0e8cb156bedf8f6541bb9b74eef3c3a.stex"
+
+[node name="Gun" instance=ExtResource( 1 )]
+position = Vector2( -0.055015, 0 )
+distance = 300
+
+[node name="Muzzle" parent="." index="0"]
+position = Vector2( 59.753, 0 )
+
+[node name="Sprite" parent="." index="3"]
+position = Vector2( 61.0415, -0.736103 )
+scale = Vector2( 2.57026, 2.57026 )
+texture = SubResource( 1 )
